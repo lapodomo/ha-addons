@@ -32,8 +32,9 @@ _checkDnsARecord(){
     if ! _transIP_rest GET "$fulldomain/dns" "" ; then
       bashio::log.error "Could not load DNS records."
     fi
-
-    
+    if [[ "$response" == null ]]; then
+      bashio::log.error "Could not get data from TransIP."
+    else
     if [[ "$IPV4" != "" ]]; then
         Arecord=$(echo $response | jq -r '. as $root|$root.dnsEntries[] | select(.type == "A") | .content')
         bashio::log.info "DNS record IPV4:" "$Arecord" 
@@ -69,6 +70,7 @@ _checkDnsARecord(){
         else
         bashio::log.info "DNS record IPV6 is up to date" 
         fi
+    fi
     fi
 
 }
