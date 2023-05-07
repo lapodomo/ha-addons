@@ -87,7 +87,7 @@ dns_challenge_add() {
     if [[ "$response" == "" ]]; then
       return 0
     else
-      bashio::log.error "Could not add TXT record."
+      bashio::log.error "Could not add TXT record. \n $response"
       return 1
     fi
   else
@@ -98,7 +98,7 @@ dns_challenge_add() {
     if [[ "$response" == "[]" ]]; then
       return 0
     else
-      bashio::log.error "Could not add TXT record."
+      bashio::log.error "Could not add TXT record. \n $response"
       return 1
     fi
   fi
