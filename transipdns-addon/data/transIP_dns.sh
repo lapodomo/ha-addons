@@ -27,15 +27,16 @@ _checkCurrentIP(){
 _checkDnsARecord(){
    fulldomain=$1
 
-   _checkCurrentIP
+    if ! _checkCurrentIP ; then
+      return 1    
     bashio::log.info "+ Pulling A/AAAA records from DNS"
     if ! _transIP_rest GET "$fulldomain/dns" "" ; then
       bashio::log.error "Could not load DNS records."
-       return 1
+      return 1
     fi
     if [[ "$response" == "" ]]; then
       bashio::log.error "Could not get data from TransIP."
-       return 1
+      return 1
     else
     if [[ "$IPV4" != "" ]]; then
         Arecord=$(echo $response | jq -r '. as $root|$root.dnsEntries[] | select(.type == "A") | .content')
@@ -44,7 +45,7 @@ _checkDnsARecord(){
         bashio::log.info "+ Updating DNS record IPV4..." 
         if ! _transIP_rest PATCH "$fulldomain/dns" '{"dnsEntry": {"name": "@","expire": 3600,"type": "A","content": "'"$IPV4"'"}}'; then
           bashio::log.error "Could not update A record."
-           return 1
+          return 1
         fi
         
         if [[ "$response" == "" ]]; then
@@ -52,7 +53,7 @@ _checkDnsARecord(){
           return 0
         else
           bashio::log.error "Could not update A record."
-           return 1
+          return 1
         fi
         
         else
@@ -82,7 +83,7 @@ _checkDnsARecord(){
         fi
     fi
     fi
-
+    return 0
 }
 
 #Usage: add _acme-challenge.www.domain.com "XKrxpRBosdIKFzxW_CT3KLZNf6q0HG9i01zxXp5CPBs"
