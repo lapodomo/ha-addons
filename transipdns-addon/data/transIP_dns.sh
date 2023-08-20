@@ -27,7 +27,7 @@ _checkCurrentIP(){
 _checkDnsARecord(){
    fulldomain=$1
 
-    if ! _checkCurrentIP ; then
+    if _checkCurrentIP ; then
       return 1 
     fi
     bashio::log.info "+ Pulling A/AAAA records from DNS"
