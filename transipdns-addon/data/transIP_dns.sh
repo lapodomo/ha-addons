@@ -31,9 +31,11 @@ _checkDnsARecord(){
     bashio::log.info "+ Pulling A/AAAA records from DNS"
     if ! _transIP_rest GET "$fulldomain/dns" "" ; then
       bashio::log.error "Could not load DNS records."
+       return 1
     fi
     if [[ "$response" == null ]]; then
       bashio::log.error "Could not get data from TransIP."
+       return 1
     else
     if [[ "$IPV4" != "" ]]; then
         Arecord=$(echo $response | jq -r '. as $root|$root.dnsEntries[] | select(.type == "A") | .content')
@@ -42,12 +44,14 @@ _checkDnsARecord(){
         bashio::log.info "+ Updating DNS record IPV4..." 
         if ! _transIP_rest PATCH "$fulldomain/dns" '{"dnsEntry": {"name": "@","expire": 3600,"type": "A","content": "'"$IPV4"'"}}'; then
           bashio::log.error "Could not update A record."
+           return 1
         fi
         
         if [[ "$response" == "" ]]; then
           bashio::log.info "DNS record IPV4 succesfull updated!" 
         else
           bashio::log.error "Could not update A record."
+           return 1
         fi
         
         else
@@ -61,11 +65,13 @@ _checkDnsARecord(){
         bashio::log.info "+ Updating DNS record IPV6..." 
         if ! _transIP_rest PATCH "$fulldomain/dns" '{"dnsEntry": {"name": "@","expire": 3600,"type": "AAAA","content": "'"$IPV6"'"}}'; then
         bashio::log.error "Could not update AAAA record."
+         return 1
         fi
         if [[ "$response" == "" ]]; then
           bashio::log.info "DNS record IPV6 succesfull updated!" 
         else
           bashio::log.error "Could not update AAAA record."
+           return 1
         fi
         else
         bashio::log.info "DNS record IPV6 is up to date" 
