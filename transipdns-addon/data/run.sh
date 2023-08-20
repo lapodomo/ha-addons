@@ -61,12 +61,13 @@ fi
 while true; do
 
 
-    if ! _checkDnsARecord "$DOMAIN" ; then
+    #if ! _checkDnsARecord "$DOMAIN" ; then
+        _checkDnsARecord "$DOMAIN"
         now="$(date +%s)"
         if bashio::config.true 'lets_encrypt.accept_terms' && [ $((now - LE_UPDATE)) -ge 43200 ]; then
             le_renew
         fi
-    fi
+    #fi
     
     sleep "${WAIT_TIME}"
 done
