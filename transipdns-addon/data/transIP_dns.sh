@@ -28,7 +28,8 @@ _checkDnsARecord(){
    fulldomain=$1
 
     if ! _checkCurrentIP ; then
-      return 1    
+      return 1 
+    fi
     bashio::log.info "+ Pulling A/AAAA records from DNS"
     if ! _transIP_rest GET "$fulldomain/dns" "" ; then
       bashio::log.error "Could not load DNS records."
