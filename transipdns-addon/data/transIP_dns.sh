@@ -33,7 +33,7 @@ _checkDnsARecord(){
       bashio::log.error "Could not load DNS records."
        return 1
     fi
-    if [[ "$response" == null ]]; then
+    if [[ "$response" == "" ]]; then
       bashio::log.error "Could not get data from TransIP."
        return 1
     else
