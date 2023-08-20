@@ -40,26 +40,28 @@ _checkDnsARecord(){
       return 1
     else
     if [[ "$IPV4" != "" ]]; then
-        Arecord=$(echo $response | jq -r '. as $root|$root.dnsEntries[] | select(.type == "A") | .content')
-        bashio::log.info "DNS record IPV4:" "$Arecord" 
-        if [ "$IPV4" != "$Arecord" ]; then
-        bashio::log.info "+ Updating DNS record IPV4..." 
-        if ! _transIP_rest PATCH "$fulldomain/dns" '{"dnsEntry": {"name": "@","expire": 3600,"type": "A","content": "'"$IPV4"'"}}'; then
-          bashio::log.error "Could not update A record."
-          return 1
-        fi
-        
-        if [[ "$response" == "" ]]; then
-          bashio::log.info "DNS record IPV4 succesfull updated!" 
-          return 0
-        else
-          bashio::log.error "Could not update A record."
-          return 1
-        fi
-        
-        else
-        bashio::log.info "DNS record IPV4 is up to date" 
-        return 0
+        Arecord=$(echo $response| .[]? | jq -r '. as $root|$root.dnsEntries[] | select(.type == "A") | .content')
+        if [[ "$Arecord" != "" ]]; then  
+           bashio::log.info "DNS record IPV4:" "$Arecord" 
+           if [ "$IPV4" != "$Arecord" ]; then
+           bashio::log.info "+ Updating DNS record IPV4..." 
+           if ! _transIP_rest PATCH "$fulldomain/dns" '{"dnsEntry": {"name": "@","expire": 3600,"type": "A","content": "'"$IPV4"'"}}'; then
+             bashio::log.error "Could not update A record."
+             return 1
+           fi
+           
+           if [[ "$response" == "" ]]; then
+             bashio::log.info "DNS record IPV4 succesfull updated!" 
+             return 0
+           else
+             bashio::log.error "Could not update A record."
+             return 1
+           fi
+           
+           else
+           bashio::log.info "DNS record IPV4 is up to date" 
+           return 0
+           fi
         fi
     fi
     if [[ "$IPV6" != "" ]]; then
