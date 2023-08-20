@@ -38,7 +38,7 @@ _checkDnsARecord(){
       return 1
     else
     if [[ "$IPV4" != "" ]]; then
-        Arecord=$(echo $response| .[]? | jq -r '. as $root|$root.dnsEntries[] | select(.type == "A") | .content')
+        Arecord=$(echo $response | jq -r '. as $root|$root.dnsEntries[] | select(.type == "A") | .content')
         if [[ "$Arecord" != "" ]]; then  
            bashio::log.info "DNS record IPV4:" "$Arecord" 
            if [ "$IPV4" != "$Arecord" ]; then
