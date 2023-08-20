@@ -1,7 +1,7 @@
 {
   "init": "false",
   "name": "TransIP dyndns",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "slug": "transipdns",
   "hassio_api": true,
   "description": "Dynamic DNS via TransIP with Let's Encrypt support",
