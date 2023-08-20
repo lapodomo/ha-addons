@@ -49,6 +49,7 @@ _checkDnsARecord(){
         
         if [[ "$response" == "" ]]; then
           bashio::log.info "DNS record IPV4 succesfull updated!" 
+          return 0
         else
           bashio::log.error "Could not update A record."
            return 1
@@ -56,6 +57,7 @@ _checkDnsARecord(){
         
         else
         bashio::log.info "DNS record IPV4 is up to date" 
+        return 0
         fi
     fi
     if [[ "$IPV6" != "" ]]; then
@@ -69,12 +71,14 @@ _checkDnsARecord(){
         fi
         if [[ "$response" == "" ]]; then
           bashio::log.info "DNS record IPV6 succesfull updated!" 
+          return 0
         else
           bashio::log.error "Could not update AAAA record."
            return 1
         fi
         else
         bashio::log.info "DNS record IPV6 is up to date" 
+        return 0
         fi
     fi
     fi
