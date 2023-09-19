@@ -99,7 +99,7 @@ dns_challenge_add() {
     if [[ "$response" == "" ]]; then
       return 0
     else
-      bashio::log.error "Could not add TXT record. \n $response"
+      bashio::log.error "Could not change existing TXT record. \n $response"
       return 1
     fi
   else
